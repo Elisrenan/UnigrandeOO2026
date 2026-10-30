@@ -7,6 +7,27 @@ class Aluno:
         self.creditos_cursados = 0
         self.mgp = 0.0
 
+    @property
+    def nome(self) -> str:
+        return self._nome
+
+    @nome.setter
+    def nome(self, valor: str) -> None:
+        valor = valor.strip()
+        if len(valor) < 3:
+            raise ValueError("Nome inválido")
+        self._nome = valor
+
+    @property
+    def mgp(self) -> float:
+        return self._mgp
+
+    @mgp.setter
+    def mgp(self, valor: float) -> None:
+        if not 0 <= valor <= 10:
+            raise ValueError("MGP deve estar entre 0 e 10")
+        self._mgp = valor
+
     def apresentar(self):
         return f"{self.matricula} - {self.nome}"
 
