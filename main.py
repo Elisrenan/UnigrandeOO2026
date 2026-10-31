@@ -33,11 +33,34 @@ class Aluno:
 
 
 class Professor:
-    def __init__(self, matricula: int,
+    def __init__(self, id_rh: int,
+                 matricula: int,
                  nome: str, email: str) -> None:
+        self.__id_rh = id_rh
         self.matricula = matricula
         self.nome = nome
         self.email = email
+
+    @property
+    def email(self) -> str:
+        return self._email
+    @email.setter
+    def email(self, valor: str) -> None:
+        valor = valor.strip().lower()
+        if "@" not in valor:
+            raise ValueError("E-mail inválido")
+        usuario, dominio = valor.split("@", 1)
+        if not usuario or "." not in dominio:
+            raise ValueError("E-mail inválido")
+        self._email = valor
+
+
+    def payload_integracao_rh(self) -> dict[str, object]:
+        return {
+                "id_rh": self.__id_rh,
+                "matricula": self.matricula,
+                "nome": self.nome
+        }
 
     def resumo(self) -> str:
         return f"{self.matricula} - {self.nome} < {self.email}"
