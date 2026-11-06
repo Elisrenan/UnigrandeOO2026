@@ -28,6 +28,16 @@ class Aluno:
             raise ValueError("MGP deve estar entre 0 e 10")
         self._mgp = valor
 
+    @property
+    def creditos_cursados(self):
+        return self._creditos_cursados
+
+    @creditos_cursados.setter
+    def creditos_cursados(self, valor: int) -> None:
+        if valor < 0:
+            raise ValueError("Créditos não podem ser negativos")
+        self._creditos_cursados = valor
+
     def apresentar(self):
         return f"{self.matricula} - {self.nome}"
 
@@ -72,8 +82,18 @@ class Curso:
         self.nome = nome
         self.total_creditos = total_creditos
 
+# 1. Criação com sucesso
 aluno_1 = Aluno(20260001, "David Leite")
 aluno_2 = Aluno(20260002, "Carlinhos Maia")
+
+# 2. Atualizações válidas via setter
+aluno_1.mgp = 8.5
+aluno_1.creditos_cursados = 24
+
+# 3. Tentativas inválidas (lançam ValueError)
+aluno_1.mgp = 11.0               # ValueError: MGP deve estar entre 0 e 10
+aluno_1.nome = "Ed"              # ValueError: Nome inválido
+aluno_1.creditos_cursados = -4   # ValueError: Créditos não podem ser negativos
 
 print(aluno_1.apresentar())
 print(aluno_2.apresentar())
