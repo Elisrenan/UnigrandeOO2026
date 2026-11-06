@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import override
+from enum import StrEnum
 
 class Pessoa(ABC):
 
@@ -116,6 +117,24 @@ class Curso:
 
     def resumo(self) -> str:
         return f"{self.nome} o coordenador é {self.coordenador.nome}"
+
+class SituacaoHistorico(StrEnum):
+    APROVADO = "AP"
+    REPROVADO_MEDIA = "RM"
+    REPROVADO_FALTA = "RF"
+
+class Disciplina(ABC):
+    MEDIA_MINIMA = 7.0
+
+    def __init__(self, codigo: int, nome: str, creditos: int) -> None:
+        self.codigo = codigo
+        self.nome = nome
+        self.creditos = creditos
+        self.pre_requisito: Disciplina | None = None
+
+
+
+
 
 # 1. Criação com sucesso
 aluno_1 = Aluno(20260001, "David Leite")
