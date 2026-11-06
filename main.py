@@ -1,11 +1,37 @@
-class Aluno:
+from abc import ABC, abstractmethod
+from datetime import date
+from typing import override
+
+class Pessoa(ABC):
+
+    def __init__(self, nome: str) -> None:
+        nome = nome.strip()
+        if len(nome) < 3:
+            raise ValueError("Nome inválido")
+        self._nome = nome
+
+    @property
+    def nome(self) -> str:
+        return self._nome
+
+    @property
+    @abstractmethod
+    def identificador_publico(self) -> str:
+        ...
+
+class Aluno(Pessoa):
     universidade = "UniGrande"
 
     def __init__(self, matricula: int, nome: str) -> None:
         self.matricula = matricula
-        self.nome = nome
+        super().__init__(nome)
         self.creditos_cursados = 0
         self.mgp = 0.0
+
+    @property
+    @override
+    def identificador_publico(self) -> str:
+        return str(self.matricula)
 
     @property
     def nome(self) -> str:
@@ -42,18 +68,24 @@ class Aluno:
         return f"{self.matricula} - {self.nome}"
 
 
-class Professor:
+class Professor(Pessoa):
     def __init__(self, id_rh: int,
                  matricula: int,
                  nome: str, email: str) -> None:
+        super().__init__(nome)
         self.__id_rh = id_rh
         self.matricula = matricula
-        self.nome = nome
         self.email = email
+
+    @property
+    @override
+    def identificador_publico(self) -> str:
+        return str(self.matricula)
 
     @property
     def email(self) -> str:
         return self._email
+
     @email.setter
     def email(self, valor: str) -> None:
         valor = valor.strip().lower()
@@ -91,16 +123,16 @@ aluno_1.mgp = 8.5
 aluno_1.creditos_cursados = 24
 
 # 3. Tentativas inválidas (lançam ValueError)
-aluno_1.mgp = 11.0               # ValueError: MGP deve estar entre 0 e 10
-aluno_1.nome = "Ed"              # ValueError: Nome inválido
-aluno_1.creditos_cursados = -4   # ValueError: Créditos não podem ser negativos
+#.mgp = 11.0               # ValueError: MGP deve estar entre 0 e 10
+#aluno_1.nome = "Ed"              # ValueError: Nome inválido
+#aluno_1.creditos_cursados = -4   # ValueError: Créditos não podem ser negativos
 
 print(aluno_1.apresentar())
 print(aluno_2.apresentar())
 
-professor_1 = Professor(1, 'Elisrenan',
+professor_1 = Professor(1, 21, 'Elisrenan',
                         'elisrenan@gmail.com')
-professor_2 = Professor(2, 'Mariano',
+professor_2 = Professor(2, 22, 'Mariano',
                         "marilindo@gmail.com")
 
 print(professor_1.resumo())
