@@ -132,10 +132,39 @@ class Disciplina(ABC):
         self.creditos = creditos
         self.pre_requisito: Disciplina | None = None
 
+    @abstractmethod
+    def avaliar_resultado(self, *,
+                          media: float,
+                          faltas: int,
+                          horas_cumpridas: int = 0) -> SituacaoHistorico:
+        ...
 
+class DisciplinaNormal(Disciplina):
 
+    def __init__(self, codigo: int, nome: str, creditos: int, limite_faltas: int) -> None:
+        super().__init__(codigo, nome, creditos)
+        self.limite_faltas = limite_faltas
 
+    @override
+    def avaliar_resultado(self, *,
+                          media: float,
+                          faltas: int,
+                          horas_cumpridas: int = 0) -> SituacaoHistorico:
+        pass
 
+class DisciplinaEstagio(Disciplina):
+
+    def __init__(self, codigo: int, nome: str, creditos: int, horas_obrigatorias: int) -> None:
+        super().__init__(codigo, nome, creditos)
+        self.horas_obrigatorias = horas_obrigatorias
+
+    @override
+    def avaliar_resultado(self, *,
+                          media: float,
+                          faltas: int,
+                          horas_cumpridas: int = 0) -> SituacaoHistorico:
+        pass
+    
 # 1. Criação com sucesso
 aluno_1 = Aluno(20260001, "David Leite")
 aluno_2 = Aluno(20260002, "Carlinhos Maia")
@@ -164,4 +193,4 @@ curso_1 = Curso(4340, "ADS", 40, professor_1)
 curso_2 = Curso(35, "SI", 200, professor_2)
 
 print(curso_1.resumo())
-print(curso_2.resumo())
+print(curso_2.resumo())c
