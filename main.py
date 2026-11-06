@@ -109,10 +109,14 @@ class Professor(Pessoa):
 
 class Curso:
     def __init__(self, codigo: int, nome: str,
-                 total_creditos: int) -> None:
+                 total_creditos: int, coordenador: Professor) -> None:
         self.codigo = codigo
         self.nome = nome
         self.total_creditos = total_creditos
+        self.coordenador = coordenador
+
+    def resumo(self) -> str:
+        return f"{self.nome} o coordenador é {self.coordenador.nome}"
 
 # 1. Criação com sucesso
 aluno_1 = Aluno(20260001, "David Leite")
@@ -138,6 +142,8 @@ professor_2 = Professor(2, 22, 'Mariano',
 print(professor_1.resumo())
 print(professor_2.resumo())
 
-curso_1 = Curso(4340, "ADS", 40)
-curso_2 = Curso(35, "SI", 200)
+curso_1 = Curso(4340, "ADS", 40, professor_1)
+curso_2 = Curso(35, "SI", 200, professor_2)
 
+print(curso_1.resumo())
+print(curso_2.resumo())
