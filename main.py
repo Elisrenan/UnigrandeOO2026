@@ -68,6 +68,7 @@ class Aluno(Pessoa):
         return f"{self.matricula} - {self.nome}"
 
 
+
 class Professor(Pessoa):
     def __init__(self, id_rh: int,
                  matricula: int,
@@ -76,6 +77,7 @@ class Professor(Pessoa):
         self.__id_rh = id_rh
         self.matricula = matricula
         self.email = email
+        self.curso_coordenado: Curso | None = None
 
     @property
     @override
@@ -107,16 +109,27 @@ class Professor(Pessoa):
     def resumo(self) -> str:
         return f"{self.matricula} - {self.nome} < {self.email}"
 
+    def assumir_coordenacao(self, curso: "Curso"):
+        if self.curso_coordenado is not None and self.curso_coordenado is not curso:
+            raise ValueError("Professor já coordena outro curso")
+        self.curso_coordenado = curso
+
 class Curso:
     def __init__(self, codigo: int, nome: str,
-                 total_creditos: int, coordenador: Professor) -> None:
+                 total_creditos: int) -> None:
         self.codigo = codigo
         self.nome = nome
         self.total_creditos = total_creditos
-        self.coordenador = coordenador
+        self.coordenador: Professor = None
 
     def resumo(self) -> str:
-        return f"{self.nome} o coordenador é {self.coordenador.nome}"
+        if self.coordenador is not None:
+            return f"{self.nome} o coordenador é {self.coordenador.nome}"
+        return f"{self.nome}"
+
+    def definir_coordenador(self, professor: Professor) -> None:
+        professor.assumir_coordenacao(self)
+        self.coordenador = professor
 
 class SituacaoHistorico(StrEnum):
     APROVADO = "AP"
@@ -164,7 +177,7 @@ class DisciplinaEstagio(Disciplina):
                           faltas: int,
                           horas_cumpridas: int = 0) -> SituacaoHistorico:
         pass
-    
+
 # 1. Criação com sucesso
 aluno_1 = Aluno(20260001, "David Leite")
 aluno_2 = Aluno(20260002, "Carlinhos Maia")
@@ -179,7 +192,10 @@ aluno_1.creditos_cursados = 24
 #aluno_1.creditos_cursados = -4   # ValueError: Créditos não podem ser negativos
 
 print(aluno_1.apresentar())
+aluno_1.universidade = "Estácio"
+print(aluno_1.universidade)
 print(aluno_2.apresentar())
+print(aluno_2.universidade)
 
 professor_1 = Professor(1, 21, 'Elisrenan',
                         'elisrenan@gmail.com')
@@ -189,8 +205,8 @@ professor_2 = Professor(2, 22, 'Mariano',
 print(professor_1.resumo())
 print(professor_2.resumo())
 
-curso_1 = Curso(4340, "ADS", 40, professor_1)
-curso_2 = Curso(35, "SI", 200, professor_2)
+curso_1 = Curso(4340, "ADS", 40)
+curso_2 = Curso(35, "SI", 200)
 
 print(curso_1.resumo())
-print(curso_2.resumo())c
+print(curso_2.resumo())
